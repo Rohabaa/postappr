@@ -105,35 +105,43 @@ function postIt() {
     title: postinput,
     descr: about
   }
-  let sendtolocal = localStorage.setItem("postdata", JSON.stringify(postdata))
+  if(!arr){
+    var arr = []
+  }
+  arr.push(postdata)
+  let sendtolocal = localStorage.setItem("postdata", JSON.stringify(arr)) 
   // console.log(sendtolocal);
   showPostcard()
 }
 let displaycard = document.getElementById("display")
 function showPostcard() {
   let getpostdata = JSON.parse(localStorage.getItem("postdata")) 
+  // console.log(getpostdata[i].title);
+  
   var useremail = JSON.parse(localStorage.getItem("data"))
   let bg = localStorage.getItem("bg")
   let now = new Date();
   let hours = now.getHours();
   let minutes = now.getMinutes();
   let seconds = now.getSeconds();
-  displaycard.innerHTML = `
- <div class="card post2  ">
-
-                         <div class="class-header m-2">${useremail.email} </div> 
-                         <div class ="date m-2"> ${hours}:${minutes}:${seconds}</div>
-
-  <div style="background-image: url(${bg});"  class="card-body">
+ for (var i=0 ; getpostdata.length; i++){
+  displaycard.innerHTML += `
+  <div class="card post2  ">
  
-
-
-    <h5 class="card-title">${getpostdata.title}</h5>
-    <p class="card-text">${getpostdata.descr}.</p> 
-    </div>
-  <div class="ed"> <button onclick="editpost()" type="button" class="btn  edit1 ">Edit</button> 
-
- <button onclick="deletepost()" type="button" class="btn edit2 ">Delete</button> </div> 
-</div> 
-             `
+                          <div class="class-header m-2">${useremail.email} </div> 
+                          <div class ="date m-2"> ${hours}:${minutes}:${seconds}</div>
+ 
+   <div style="background-image: url(${bg});"  class="card-body">
+  
+ 
+ 
+     <h5 class="card-title">${getpostdata[i].title}</h5>
+     <p class="card-text">${getpostdata[i].descr}.</p> 
+     </div>
+   <div class="ed"> <button onclick="editpost()" type="button" class="btn  edit1 ">Edit</button> 
+ 
+  <button onclick="deletepost()" type="button" class="btn edit2 ">Delete</button> </div> 
+ </div> 
+              `
+ }
 }
