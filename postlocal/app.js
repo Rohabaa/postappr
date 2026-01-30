@@ -93,55 +93,60 @@ function imagepost(src) {
 
 // Simple version
 function postIt() {
-  let postinput = document.getElementById("postinput").value
-  let about = document.getElementById("about").value
+  let postinput = document.getElementById("postinput").value;
+  let about = document.getElementById("about").value;
+
   if (!postinput || !about) {
-    alert("Title aur Description dono required hain")
-    
-    return
+    alert("Title aur Description dono required hain");
+    return;
   }
-  
+
+  // Retrieve existing posts from localStorage or initialize an empty array
+  let arr = JSON.parse(localStorage.getItem("postdata")) || [];
+
+  // Create a new post object
   var postdata = {
     title: postinput,
     descr: about
-  }
-  if(!arr){
-    var arr = []
-  }
-  arr.push(postdata)
-  let sendtolocal = localStorage.setItem("postdata", JSON.stringify(arr)) 
-  // console.log(sendtolocal);
-  showPostcard()
+  };
+
+  // Add the new post to the array
+  arr.push(postdata);
+
+  // Save the updated array back to localStorage
+  localStorage.setItem("postdata", JSON.stringify(arr));
+
+  // Call showPostcard to display the updated posts
+  showPostcard();
 }
-let displaycard = document.getElementById("display")
+
+let displaycard = document.getElementById("display");
 function showPostcard() {
-  let getpostdata = JSON.parse(localStorage.getItem("postdata")) 
-  // console.log(getpostdata[i].title);
-  
-  var useremail = JSON.parse(localStorage.getItem("data"))
-  let bg = localStorage.getItem("bg")
+  // Retrieve posts from localStorage
+  let getpostdata = JSON.parse(localStorage.getItem("postdata")) || [];
+
+  // Clear the display area before rendering posts
+  displaycard.innerHTML = "";
+
+  // Loop through the posts and render them
+  let useremail = JSON.parse(localStorage.getItem("data"));
+  let bg = localStorage.getItem("bg");
   let now = new Date();
   let hours = now.getHours();
   let minutes = now.getMinutes();
   let seconds = now.getSeconds();
- for (var i=0 ; getpostdata.length; i++){
-  displaycard.innerHTML += `
-  <div class="card post2  ">
- 
-                          <div class="class-header m-2">${useremail.email} </div> 
-                          <div class ="date m-2"> ${hours}:${minutes}:${seconds}</div>
- 
-   <div style="background-image: url(${bg});"  class="card-body">
-  
- 
- 
-     <h5 class="card-title">${getpostdata[i].title}</h5>
-     <p class="card-text">${getpostdata[i].descr}.</p> 
-     </div>
-   <div class="ed"> <button onclick="editpost()" type="button" class="btn  edit1 ">Edit</button> 
- 
-  <button onclick="deletepost()" type="button" class="btn edit2 ">Delete</button> </div> 
- </div> 
-              `
- }
+
+  for (var i = 0; i < getpostdata.length; i++) {
+    displaycard.innerHTML += `
+      <div class="card post2">
+        <div class="class-header m-2">${useremail?.email || "Unknown User"}</div>
+        <div class="date m-2">${hours}:${minutes}:${seconds}</div>
+        <div style="background-image: url(${bg});" class="card-body">
+          <h5 class="card-title">${getpostdata[i].title}</h5>
+          <p class="card-text">${getpostdata[i].descr}.</p>
+        </div>
+      </div>
+    `;
+  }
 }
+showPostcard()
